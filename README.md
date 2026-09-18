@@ -35,4 +35,4 @@ curl -fsSL https://gist.githubusercontent.com/lilfeelz/c5e63e7e510aeffb7766a1b10
 
 ## This repo's own hooks
 
-`git config core.hooksPath .` — the hooks run on themselves.
+`git config core.hooksPath "$(pwd)"` — the hooks run on themselves. (A relative `.` does not resolve for git here; use the absolute path.)
