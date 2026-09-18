@@ -1,0 +1,21 @@
+name: ci
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  shell:
+    uses: JakobMelchard/.github/.github/workflows/shell.yml@main
+    with:
+      paths: .
+      severity: warning
+  portable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: reject bash 4+ builtins
+        run: |
+          if grep -nE '^\s*(mapfile|readarray)\b|declare -A' pre-commit pre-push install; then
+            echo "bash 4+ construct found — macOS ships bash 3.2" >&2
+            exit 1
+          fi
+          echo portable

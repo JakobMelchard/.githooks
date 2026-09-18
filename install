@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Install the shared JakobMelchard hooks into the current repo.
+#
+#   hooks-install                         # from JakobMelchard/bin
+#   gh api repos/JakobMelchard/.githooks/contents/install -q .content | base64 -d | bash
+#   ./install                             # from a clone of .githooks
+#
+# Vendors pre-commit and pre-push into .githooks/ and sets core.hooksPath.
+# Re-run to refresh. Repo-specific checks go in .githooks/<hook>.local.
+#
+# The source repo is private, so this goes through `gh api`, not raw URLs.
+# bash 3.2 compatible.
+set -euo pipefail
+
+REPO="JakobMelchard/.githooks"
+REF="${HOOKS_REF:-main}"
+HOOKS="pre-commit pre-push"
+
+cd "$(git rev-parse --show-toplevel)"
+mkdir -p .githooks
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"
+if [ -n "$here" ] && [ -f "$here/pre-commit" ] && [ -f "$here/pre-push" ]; then
+  src="$here"                                   # running from a clone
+else
+  command -v gh >/dev/null || { echo "install: gh is required (private source repo)" >&2; exit 1; }
+  gh api "repos/$REPO/tarball/$REF" > "$tmp/h.tgz"
+  tar -xzf "$tmp/h.tgz" -C "$tmp" --strip-components=1
+  src="$tmp"
+fi
+
+for h in $HOOKS; do
+  {
+    head -1 "$src/$h"
+    echo "# VENDORED from $REPO/$h@$REF — do not edit."
+    echo "# Refresh: hooks-install  (JakobMelchard/bin), or see $REPO/install."
+    echo "# Repo-specific checks belong in .githooks/$h.local (executable)."
+    tail -n +2 "$src/$h"
+  } > ".githooks/$h"
+  chmod +x ".githooks/$h"
+done
+
+git config core.hooksPath .githooks
+echo "hooks installed -> .githooks/ (core.hooksPath set): $HOOKS"
+
+command -v gitleaks >/dev/null || echo "note: gitleaks not found — secret scanning will be skipped (brew install gitleaks)"
