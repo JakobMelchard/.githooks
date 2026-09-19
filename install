@@ -2,7 +2,7 @@
 # Install the shared JakobMelchard hooks into the current repo.
 #
 #   hooks-install                         # from JakobMelchard/bin
-#   gh api repos/JakobMelchard/.githooks/contents/install -q .content | base64 -d | bash
+#   gh api -H 'Accept: application/vnd.github.raw+json' repos/JakobMelchard/.githooks/contents/install > /tmp/hooks-install && bash /tmp/hooks-install
 #   ./install                             # from a clone of .githooks
 #
 # Vendors pre-commit and pre-push into .githooks/ and sets core.hooksPath.
