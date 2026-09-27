@@ -1,6 +1,6 @@
 # .githooks
 
-Three bash scripts, no build. `pre-commit`, `pre-push`, `install`.
+Four bash scripts, no build. `pre-commit`, `pre-push`, `commit-msg`, `install`.
 
 - bash 3.2 only. CI fails on `mapfile`, `readarray`, `declare -A`.
 - Every tool call is guarded by `have <tool>`; a missing tool skips, never fails.

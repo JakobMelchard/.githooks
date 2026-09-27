@@ -6,6 +6,7 @@ Shared git hooks for the `JakobMelchard` org and the `lilfeelz` repos. Private.
 |------|------|
 | `pre-commit` | dispatches on staged file type: `gitleaks` (blocks), `gofmt -w`, `py_compile` + `ruff`, `bash -n`/`zsh -n` + `shellcheck`, `prettier --write` + `eslint`, `terraform fmt`. Every tool is optional and skipped when absent. |
 | `pre-push` | cheap build gate: `go vet` + `go build` when `go.mod` exists, `terraform fmt -check` when `terraform/` exists. Tests belong in CI. |
+| `commit-msg` | rejects a subject that is not a conventional commit (`type(scope)!: subject`; merge, revert, fixup and squash subjects pass). The same regex gates PR titles in the org's reusable workflows, because a squash merge makes the PR title the commit subject that release-please reads. |
 
 Both run `.githooks/<hook>.local` last when it exists and is executable — that is the per-repo extension point, so the vendored copy stays refreshable.
 
@@ -16,7 +17,7 @@ hooks-install                                   # JakobMelchard/bin
 gh api -H 'Accept: application/vnd.github.raw+json' repos/JakobMelchard/.githooks/contents/install > /tmp/hooks-install && bash /tmp/hooks-install
 ```
 
-Vendors the two hooks into `.githooks/` with a `VENDORED` header and sets `core.hooksPath`. Commit the copies. Re-run to refresh.
+Vendors the three hooks into `.githooks/` with a `VENDORED` header and sets `core.hooksPath`. Commit the copies. Re-run to refresh.
 
 In CI use the composite action: `uses: JakobMelchard/.github/actions/hooks@main`.
 
@@ -34,7 +35,7 @@ A file that is staged *and* has further unstaged edits is checked on its **index
 
 - **bash 3.2**. macOS ships 3.2 and never updated it: no `mapfile`, no `readarray`, no `declare -A`. CI rejects them.
 - Every checker is optional and guarded by `have <tool>`; `sh` shebangs get `sh -n`, `bash` gets `bash -n` + shellcheck, `zsh` gets `zsh -n`. The interpreter is matched as a whole token (`fish` is not `sh`).
-- `set -eo pipefail` in `pre-commit` (not `-u`: `$1` may be unset in hook context); `set -euo pipefail` in `pre-push` and `install`.
+- `set -eo pipefail` in `pre-commit` and `commit-msg` (not `-u`: `$1` may be unset in hook context); `set -euo pipefail` in `pre-push` and `install`.
 - Loops over file lists use here-strings, never pipes — a piped `while` runs in a subshell and `fail` cannot abort the commit.
 - Bypass with `git commit --no-verify`.
 

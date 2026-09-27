@@ -5,7 +5,7 @@
 #   gh api -H 'Accept: application/vnd.github.raw+json' repos/JakobMelchard/.githooks/contents/install > /tmp/hooks-install && bash /tmp/hooks-install
 #   ./install                             # from a clone of .githooks
 #
-# Vendors pre-commit and pre-push into .githooks/ and sets core.hooksPath.
+# Vendors pre-commit, pre-push and commit-msg into .githooks/ and sets core.hooksPath.
 # Re-run to refresh. Repo-specific checks go in .githooks/<hook>.local.
 #
 # The source repo is private, so this goes through `gh api`, not raw URLs.
@@ -14,7 +14,7 @@ set -euo pipefail
 
 REPO="JakobMelchard/.githooks"
 REF="${HOOKS_REF:-main}"
-HOOKS="pre-commit pre-push"
+HOOKS="pre-commit pre-push commit-msg"
 
 cd "$(git rev-parse --show-toplevel)"
 mkdir -p .githooks
@@ -23,7 +23,7 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"
-if [ -n "$here" ] && [ -f "$here/pre-commit" ] && [ -f "$here/pre-push" ]; then
+if [ -n "$here" ] && [ -f "$here/pre-commit" ] && [ -f "$here/pre-push" ] && [ -f "$here/commit-msg" ]; then
   src="$here"                                   # running from a clone
 else
   command -v gh >/dev/null || { echo "install: gh is required (private source repo)" >&2; exit 1; }
