@@ -38,8 +38,13 @@ if have gofmt; then
   no "$h/gofmt.sh" x.go
   ok "$h/gofmt.sh" x.go
 fi
-# a missing tool fails instead of skipping
-no env PATH=/usr/bin:/bin "$h/gofmt.sh" x.go
+# a missing tool fails instead of skipping: a PATH holding only what the script itself needs
+mkdir nobin
+for t in bash dirname; do ln -s "$(command -v "$t")" "nobin/$t"; done
+printf 'package x\n' >y.go
+no env PATH="$PWD/nobin" "$h/gofmt.sh" y.go
+out=$(PATH="$PWD/nobin" "$h/gofmt.sh" y.go 2>&1); printf "%s" "$out" | grep -q "gofmt not found" || { bad=$((bad + 1)); echo "FAIL: missing-tool message"; }
+n=$((n + 1))
 
 # tofu-fmt
 if have tofu || have terraform; then
