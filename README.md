@@ -4,8 +4,8 @@ Shared git hooks for the `JakobMelchard` org and the `lilfeelz` repos. Private.
 
 | Hook | Does |
 |------|------|
-| `pre-commit` | dispatches on staged file type: `gitleaks` (blocks), `gofmt -w`, `py_compile` + `ruff`, `bash -n`/`zsh -n` + `shellcheck`, `prettier --write` + `eslint`, `terraform fmt`. Every tool is optional and skipped when absent. |
-| `pre-push` | cheap build gate: `go vet` + `go build` when `go.mod` exists, `terraform fmt -check` when `terraform/` exists. Tests belong in CI. |
+| `pre-commit` | dispatches on staged file type: `gitleaks` (blocks), `gofmt -w`, `py_compile` + `ruff`, `bash -n`/`zsh -n` + `shellcheck`, `prettier --write` + `eslint`, `swift-format` (Xcode's or brew's), `terraform fmt`. Every tool is optional and skipped when absent. |
+| `pre-push` | cheap build gate: `go vet` + `go build` when `go.mod` exists, `terraform fmt -check` when `terraform/` exists, `swift build` when `Package.swift` exists, `xcodegen generate` when `project.yml` exists. Tests belong in CI. |
 | `commit-msg` | rejects a subject that is not a conventional commit (`type(scope)!: subject`; merge, revert, fixup and squash subjects pass). The same regex gates PR titles in the org's reusable workflows, because a squash merge makes the PR title the commit subject that release-please reads. |
 
 Both run `.githooks/<hook>.local` last when it exists and is executable — that is the per-repo extension point, so the vendored copy stays refreshable.
