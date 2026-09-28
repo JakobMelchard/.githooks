@@ -68,9 +68,3 @@ test/run         # hook scripts against good and bad inputs
 ```
 
 Release: merge to main, tag `vX.Y.Z` on main. Consumers move when Renovate opens the bump.
-
-## Legacy (until every repo has migrated)
-
-The root `pre-commit`, `pre-push`, `commit-msg` and `install` are the old vendored hooks, still
-fetched by `hooks-install` and `fleet-sync` for repos that carry a `.githooks/` copy. Do not extend
-them; they are removed once the last consumer moves to prek.
