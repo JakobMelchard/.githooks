@@ -16,7 +16,8 @@ REPO="JakobMelchard/.githooks"
 REF="${HOOKS_REF:-main}"
 HOOKS="pre-commit pre-push commit-msg"
 
-cd "$(git rev-parse --show-toplevel)"
+top=$(git rev-parse --show-toplevel) || { echo "install: not in a git repo" >&2; exit 1; }
+cd "$top"
 mkdir -p .githooks
 
 tmp=$(mktemp -d)
