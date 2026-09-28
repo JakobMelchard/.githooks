@@ -1,0 +1,81 @@
+# Hook manifest for prek (and pre-commit). Consumers pin this repo by tag:
+#
+#   - repo: https://github.com/JakobMelchard/.githooks
+#     rev: v1.0.0
+#     hooks: [{id: conventional-commit}, {id: gofmt}]
+#
+# Every hook here wraps a toolchain the repo already needs (go, swift, npm, tofu), so it runs
+# with language: script against the installed tool and fails with an install hint when the tool
+# is missing. Tools with a maintained upstream hook (gitleaks, ruff, shellcheck) are not wrapped
+# here; consumers pin those repos directly.
+
+- id: conventional-commit
+  name: conventional commit subject
+  description: "Reject a subject that is not <type>(<scope>)!: <subject>. Same regex as the PR-title check."
+  entry: hooks/conventional-commit.sh
+  language: script
+  stages: [commit-msg]
+
+- id: shell-syntax
+  name: shell syntax (bash -n, sh -n, zsh -n)
+  entry: hooks/shell-syntax.sh
+  language: script
+  types: [shell]
+
+- id: gofmt
+  name: gofmt
+  entry: hooks/gofmt.sh
+  language: script
+  types: [go]
+
+- id: go-build
+  name: go vet and go build
+  entry: hooks/go-build.sh
+  language: script
+  pass_filenames: false
+  types: [go]
+  stages: [pre-push]
+
+- id: swift-format
+  name: swift-format
+  description: Format in place, then lint --strict. Uses a swift-format on PATH, else the one Xcode ships.
+  entry: hooks/swift-format.sh
+  language: script
+  types: [swift]
+
+- id: swift-build
+  name: swift build
+  entry: hooks/swift-build.sh
+  language: script
+  pass_filenames: false
+  types: [swift]
+  stages: [pre-push]
+
+- id: xcodegen
+  name: xcodegen generate
+  description: Every tracked project.yml still generates.
+  entry: hooks/xcodegen.sh
+  language: script
+  pass_filenames: false
+  files: (^|/)(project\.yml|.*\.swift)$
+  stages: [pre-push]
+
+- id: prettier
+  name: prettier (repo-installed)
+  description: Runs the prettier from the repo's node_modules, so the version and config come from package.json.
+  entry: hooks/prettier.sh
+  language: script
+  types_or: [javascript, css, html, json, markdown, yaml]
+
+- id: eslint
+  name: eslint (repo-installed)
+  entry: hooks/eslint.sh
+  language: script
+  types: [javascript]
+
+- id: tofu-fmt
+  name: tofu fmt
+  description: Uses tofu, else terraform.
+  entry: hooks/tofu-fmt.sh
+  language: script
+  types: [terraform]

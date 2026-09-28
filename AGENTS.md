@@ -1,9 +1,13 @@
 # .githooks
 
-Four bash scripts, no build. `pre-commit`, `pre-push`, `commit-msg`, `install`.
+A prek / pre-commit hook repository. `.pre-commit-hooks.yaml` declares the hooks; `hooks/*.sh`
+implement them. No build.
 
 - bash 3.2 only. CI fails on `mapfile`, `readarray`, `declare -A`.
-- Every tool call is guarded by `have <tool>`; a missing tool skips, never fails.
-- Consumers hold vendored copies with a `VENDORED` header. Never edit a copy; change here, then `hooks-install` in the consumer.
-- Repo-specific logic goes in the consumer's `.githooks/<hook>.local`, never here.
-- Check: `bash -n`, `shellcheck --severity=warning`, then commit — the hooks run on this repo (`core.hooksPath .`).
+- A hook wraps a tool the consumer already needs. Missing tool: `need <tool> <hint>` fails, never
+  skips silently.
+- Prefer an upstream hook repo over wrapping a tool here (gitleaks, ruff, shellcheck already are).
+- Formatters rewrite and exit non-zero; prek reports the modified files.
+- Check: `test/run`, `prek validate-manifest .pre-commit-hooks.yaml`, `prek run --all-files`.
+- Consumers pin a tag. Changing a hook id or its stage is a breaking change: bump the major.
+- Root `pre-commit` `pre-push` `commit-msg` `install` are legacy (vendored consumers). Do not extend.

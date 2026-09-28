@@ -1,0 +1,37 @@
+# This repo's own hooks: the local definitions run the scripts from the working tree, so a change
+# is exercised before it is tagged. Consumers pin the repo instead (see README).
+default_install_hook_types: [pre-commit, commit-msg]
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=warning]
+        exclude_types: [zsh]
+  - repo: local
+    hooks:
+      - id: conventional-commit
+        name: conventional commit subject
+        entry: hooks/conventional-commit.sh
+        language: script
+        stages: [commit-msg]
+      - id: shell-syntax
+        name: shell syntax
+        entry: hooks/shell-syntax.sh
+        language: script
+        types: [shell]
+      - id: validate-manifest
+        name: validate .pre-commit-hooks.yaml
+        entry: prek validate-manifest
+        language: system
+        files: ^\.pre-commit-hooks\.yaml$
+      - id: test
+        name: hook tests
+        entry: test/run
+        language: script
+        pass_filenames: false
+        files: ^(hooks|test)/
