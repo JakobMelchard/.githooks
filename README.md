@@ -10,6 +10,7 @@ machine can fetch it without a token.
 
 ```yaml
 default_install_hook_types: [pre-commit, commit-msg, pre-push]
+default_stages: [pre-commit] # upstream hooks (gitleaks) would otherwise rerun at every stage
 repos:
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.1
