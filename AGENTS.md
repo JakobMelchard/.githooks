@@ -10,4 +10,3 @@ implement them. No build.
 - Formatters rewrite and exit non-zero; prek reports the modified files.
 - Check: `test/run`, `prek validate-manifest .pre-commit-hooks.yaml`, `prek run --all-files`.
 - Consumers pin a tag. Changing a hook id or its stage is a breaking change: bump the major.
-- Root `pre-commit` `pre-push` `commit-msg` `install` are legacy (vendored consumers). Do not extend.
