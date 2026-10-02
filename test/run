@@ -14,6 +14,8 @@ ok() { n=$((n + 1)); if "$@" >/dev/null 2>&1; then :; else bad=$((bad + 1)); ech
 no() { n=$((n + 1)); if "$@" >/dev/null 2>&1; then bad=$((bad + 1)); echo "FAIL (expected fail): $*"; fi; }
 msg() { printf '%s\n' "$1" >m; }
 have() { command -v "$1" >/dev/null 2>&1; }
+have_prettier() { [ -x node_modules/.bin/prettier ] || (have npx && npx --no-install prettier --version >/dev/null 2>&1); }
+have_eslint() { [ -x node_modules/.bin/eslint ] || (have npx && npx --no-install eslint --version >/dev/null 2>&1); }
 
 # conventional-commit
 msg 'feat: add x';                  ok "$h/conventional-commit.sh" m
@@ -63,7 +65,7 @@ if have swift-format || xcrun --find swift-format >/dev/null 2>&1; then
 fi
 
 # prettier
-if have prettier || have npx; then
+if have_prettier; then
   printf "const a = 'x'\n" > p.js
   ok "$h/prettier.sh" p.js
   grep -q "const a = 'x'" p.js || { bad=$((bad + 1)); echo "FAIL: prettier rewrote file without config"; }
@@ -81,7 +83,7 @@ if have prettier || have npx; then
 fi
 
 # eslint
-if have eslint || have npx; then
+if have_eslint; then
   printf "const a = 'x'\n" > e.js
   ok "$h/eslint.sh" e.js
   out=$("$h/eslint.sh" e.js 2>&1)
