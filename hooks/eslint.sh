@@ -3,5 +3,30 @@
 set -eo pipefail
 export HOOK=eslint
 . "$(dirname "$0")/lib.sh"
-npx --no-install eslint --version >/dev/null 2>&1 || fail "eslint not installed in this repo (npm ci). Skip once with SKIP=$HOOK."
-npx --no-install eslint --quiet "$@"
+
+if [ -x "node_modules/.bin/eslint" ]; then
+  ESLINT=(node_modules/.bin/eslint)
+elif npx --no-install eslint --version >/dev/null 2>&1; then
+  ESLINT=(npx --no-install eslint)
+else
+  fail "eslint not installed in this repo (npm ci). Skip once with SKIP=$HOOK."
+fi
+
+has_config=0
+for f in eslint.config.* .eslintrc*; do
+  if [ -e "$f" ]; then
+    has_config=1
+    break
+  fi
+done
+
+if [ "$has_config" -eq 0 ] && [ -f package.json ] && grep -q '"eslintConfig"' package.json 2>/dev/null; then
+  has_config=1
+fi
+
+if [ "$has_config" -eq 0 ]; then
+  echo "eslint: no config found, skipping."
+  exit 0
+fi
+
+"${ESLINT[@]}" --quiet "$@"

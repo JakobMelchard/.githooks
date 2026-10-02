@@ -62,5 +62,45 @@ if have swift-format || xcrun --find swift-format >/dev/null 2>&1; then
   n=$((n + 1))
 fi
 
+# prettier
+if have prettier || have npx; then
+  printf "const a = 'x'\n" > p.js
+  ok "$h/prettier.sh" p.js
+  grep -q "const a = 'x'" p.js || { bad=$((bad + 1)); echo "FAIL: prettier rewrote file without config"; }
+  n=$((n + 1))
+  out=$("$h/prettier.sh" p.js 2>&1)
+  printf "%s" "$out" | grep -q "no config found" || { bad=$((bad + 1)); echo "FAIL: prettier missing skip notice"; }
+  n=$((n + 1))
+
+  echo '{"prettier": {"semi": false}}' > package.json
+  printf "const a = 'x';\n" > p.js
+  ok "$h/prettier.sh" p.js
+  grep -q "const a = \"x\"" p.js || { bad=$((bad + 1)); echo "FAIL: prettier did not format with config"; }
+  n=$((n + 1))
+  rm -f package.json p.js
+fi
+
+# eslint
+if have eslint || have npx; then
+  printf "const a = 'x'\n" > e.js
+  ok "$h/eslint.sh" e.js
+  out=$("$h/eslint.sh" e.js 2>&1)
+  printf "%s" "$out" | grep -q "no config found" || { bad=$((bad + 1)); echo "FAIL: eslint missing skip notice"; }
+  n=$((n + 1))
+
+  cat <<'EOF' > eslint.config.js
+module.exports = [{
+  rules: {
+    "no-var": "error"
+  }
+}];
+EOF
+  printf "var a = 1\n" > e.js
+  no "$h/eslint.sh" e.js
+  printf "const a = 1\n" > e.js
+  ok "$h/eslint.sh" e.js
+  rm -f eslint.config.js e.js
+fi
+
 echo "$((n - bad))/$n passed"
 [ "$bad" -eq 0 ]
