@@ -14,6 +14,8 @@ ok() { n=$((n + 1)); if "$@" >/dev/null 2>&1; then :; else bad=$((bad + 1)); ech
 no() { n=$((n + 1)); if "$@" >/dev/null 2>&1; then bad=$((bad + 1)); echo "FAIL (expected fail): $*"; fi; }
 msg() { printf '%s\n' "$1" >m; }
 have() { command -v "$1" >/dev/null 2>&1; }
+have_prettier() { [ -x node_modules/.bin/prettier ] || (have npx && npx --no-install prettier --version >/dev/null 2>&1); }
+have_eslint() { [ -x node_modules/.bin/eslint ] || (have npx && npx --no-install eslint --version >/dev/null 2>&1); }
 
 # conventional-commit
 msg 'feat: add x';                  ok "$h/conventional-commit.sh" m
@@ -60,6 +62,46 @@ if have swift-format || xcrun --find swift-format >/dev/null 2>&1; then
   ok "$h/swift-format.sh" a.swift
   grep -q 'let x = 1' a.swift || { bad=$((bad + 1)); echo "FAIL: swift-format did not rewrite"; }
   n=$((n + 1))
+fi
+
+# prettier
+if have_prettier; then
+  printf "const a = 'x'\n" > p.js
+  ok "$h/prettier.sh" p.js
+  grep -q "const a = 'x'" p.js || { bad=$((bad + 1)); echo "FAIL: prettier rewrote file without config"; }
+  n=$((n + 1))
+  out=$("$h/prettier.sh" p.js 2>&1)
+  printf "%s" "$out" | grep -q "no config found" || { bad=$((bad + 1)); echo "FAIL: prettier missing skip notice"; }
+  n=$((n + 1))
+
+  echo '{"prettier": {"semi": false}}' > package.json
+  printf "const a = 'x';\n" > p.js
+  ok "$h/prettier.sh" p.js
+  grep -q "const a = \"x\"" p.js || { bad=$((bad + 1)); echo "FAIL: prettier did not format with config"; }
+  n=$((n + 1))
+  rm -f package.json p.js
+fi
+
+# eslint
+if have_eslint; then
+  printf "const a = 'x'\n" > e.js
+  ok "$h/eslint.sh" e.js
+  out=$("$h/eslint.sh" e.js 2>&1)
+  printf "%s" "$out" | grep -q "no config found" || { bad=$((bad + 1)); echo "FAIL: eslint missing skip notice"; }
+  n=$((n + 1))
+
+  cat <<'EOF' > eslint.config.js
+module.exports = [{
+  rules: {
+    "no-var": "error"
+  }
+}];
+EOF
+  printf "var a = 1\n" > e.js
+  no "$h/eslint.sh" e.js
+  printf "const a = 1\n" > e.js
+  ok "$h/eslint.sh" e.js
+  rm -f eslint.config.js e.js
 fi
 
 echo "$((n - bad))/$n passed"
