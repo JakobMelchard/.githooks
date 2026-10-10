@@ -8,9 +8,10 @@ export HOOK=shell-syntax
 rc=0
 for f in "$@"; do
   i=$(head -1 "$f" | sed -nE 's#^\#![^ ]*/(env +)?(bash|sh|zsh)([[:space:]].*)?$#\2#p')
-  case "${i:-${f##*.}}" in
-    zsh) need zsh "brew install zsh"; zsh -n "$f" || rc=1 ;;
-    sh) sh -n "$f" || rc=1 ;;
+  b=${f##*/}
+  case "${i:-$b}" in
+    zsh|*.zsh|.zshrc|.zshenv|.zprofile|.zlogin) need zsh "brew install zsh"; zsh -n "$f" || rc=1 ;;
+    sh|*.sh) sh -n "$f" || rc=1 ;;
     *) bash -n "$f" || rc=1 ;;
   esac
 done

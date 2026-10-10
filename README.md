@@ -40,7 +40,7 @@ skipped, CI cannot.
 | id | stage | does |
 |----|-------|------|
 | `conventional-commit` | commit-msg | `type(scope)!: subject`, max 100 chars; merge, revert, fixup, squash and amend pass. The same regex gates PR titles in the org workflows. |
-| `shell-syntax` | pre-commit | `bash -n` / `sh -n` / `zsh -n` by shebang. Pair with `shellcheck-py` (`exclude_types: [zsh]`). |
+| `shell-syntax` | pre-commit | `bash -n` / `sh -n` / `zsh -n` by shebang, else by name (`.zshrc`, `.zshenv`, `.zprofile`, `.zlogin`, `*.zsh` are zsh). Pair with `shellcheck-py` (`exclude_types: [zsh]`). |
 | `gofmt` | pre-commit | rewrites, then fails so you re-stage |
 | `go-build` | pre-push | `go vet ./...` and `go build ./...` when `go.mod` is at the root |
 | `swift-format` | pre-commit | `format --in-place`, then `lint --strict`; a brew `swift-format` wins over Xcode's |
