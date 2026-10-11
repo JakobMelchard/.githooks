@@ -32,7 +32,15 @@ printf '#!/usr/bin/env bash\necho ok\n' >good.sh
 printf '#!/bin/sh\nif then\n' >bad
 ok "$h/shell-syntax.sh" good.sh
 no "$h/shell-syntax.sh" bad
-if have zsh; then printf '#!/usr/bin/env zsh\ncase x in\n' >bad.zsh; no "$h/shell-syntax.sh" bad.zsh; fi
+if have zsh; then
+  printf '#!/usr/bin/env zsh\ncase x in\n' >bad.zsh; no "$h/shell-syntax.sh" bad.zsh
+  # no shebang: the basename picks zsh, so zsh-only syntax (glob qualifier) passes and bash -n is not used
+  printf '[[ -n $ZDOTDIR/.zcompdump(#qN.mh+168) ]] && echo stale\n' >q
+  for f in .zshrc .zshenv .zprofile .zlogin q.zsh; do
+    cp q "$f"; ok "$h/shell-syntax.sh" "$f"
+    printf 'case x in\n' >"$f"; no "$h/shell-syntax.sh" "$f"
+  done
+fi
 
 # gofmt: rewrites and fails, then passes
 if have gofmt; then
