@@ -13,16 +13,8 @@ else
 fi
 
 has_config=0
-for f in eslint.config.* .eslintrc*; do
-  if [ -e "$f" ]; then
-    has_config=1
-    break
-  fi
-done
-
-if [ "$has_config" -eq 0 ] && [ -f package.json ] && grep -q '"eslintConfig"' package.json 2>/dev/null; then
-  has_config=1
-fi
+for f in eslint.config.* .eslintrc*; do [ -e "$f" ] && has_config=1; done
+grep -qs '"eslintConfig"' package.json && has_config=1
 
 if [ "$has_config" -eq 0 ]; then
   echo "eslint: no config found, skipping."

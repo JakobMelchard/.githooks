@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# commit-msg: reject a subject that is not a conventional commit. PRs are squash-merged with the
-# PR title as the subject and release-please parses it, so the same regex gates PR titles in
-# JakobMelchard/.github (shell.yml, node.yml, ...).
+# commit-msg: reject a non-conventional subject. Same regex as the PR-title check in
+# JakobMelchard/.github, because squash-merge makes the PR title the commit release-please parses.
 set -eo pipefail
 export HOOK=conventional-commit
 . "$(dirname "$0")/lib.sh"

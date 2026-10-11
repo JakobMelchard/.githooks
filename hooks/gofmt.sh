@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rewrite unformatted Go files. prek fails the commit when a hook modifies files; re-stage them.
+# Rewrite unformatted Go files, then fail so they get re-staged.
 set -eo pipefail
 export HOOK=gofmt
 . "$(dirname "$0")/lib.sh"

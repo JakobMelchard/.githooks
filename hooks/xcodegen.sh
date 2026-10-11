@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# pre-push: every tracked project.yml still generates. A spec that no longer generates is broken
-# for everyone who clones. Finds specs anywhere (apps keep them in ios/).
+# pre-push: every tracked project.yml (any directory) still generates.
 set -euo pipefail
 export HOOK=xcodegen
 . "$(dirname "$0")/lib.sh"

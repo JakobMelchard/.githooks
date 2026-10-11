@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pre-push: cheap build gate for the module at the repo root. Tests belong in CI.
+# pre-push: vet and build the module at the repo root. Tests belong in CI.
 set -euo pipefail
 export HOOK=go-build
 . "$(dirname "$0")/lib.sh"

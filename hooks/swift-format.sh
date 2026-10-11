@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Format in place, then lint --strict for what formatting cannot fix. The config is the
-# .swift-format each file resolves by walking up. A brew swift-format wins over Xcode's.
+# Format in place, then lint --strict. A brew swift-format wins over Xcode's.
 set -eo pipefail
 export HOOK=swift-format
 . "$(dirname "$0")/lib.sh"
