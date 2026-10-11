@@ -15,7 +15,7 @@ repos:
     rev: v8.30.1
     hooks: [{ id: gitleaks }]
   - repo: https://github.com/JakobMelchard/.githooks
-    rev: v1.0.0
+    rev: v2.0.0
     hooks:
       - id: conventional-commit
       - id: swift-format
@@ -36,7 +36,7 @@ Renovate bumps every `rev`. CI runs the same config through
 
 | id | stage | does |
 |----|-------|------|
-| `conventional-commit` | commit-msg | `type(scope)!: subject`, max 100 chars; merge, revert, fixup, squash and amend pass. The same regex gates PR titles in the org workflows. |
+| `conventional-commit` | commit-msg | `type(scope)!: subject`, max 72 chars; merge, revert, fixup, squash and amend pass. The same regex gates PR titles in the org workflows. |
 | `shell-syntax` | pre-commit | `bash -n` / `sh -n` / `zsh -n` by shebang, else by name (`.zshrc`, `.zshenv`, `.zprofile`, `.zlogin`, `*.zsh` are zsh). Pair with `shellcheck-py` (`exclude_types: [zsh]`). |
 | `gofmt` | pre-commit | rewrites, then fails so you re-stage |
 | `go-build` | pre-push | `go vet ./...` and `go build ./...` when `go.mod` is at the root |
@@ -49,7 +49,7 @@ Renovate bumps every `rev`. CI runs the same config through
 Use upstream hook repos for the rest: `gitleaks/gitleaks`, `astral-sh/ruff-pre-commit`
 (`ruff-check`), `shellcheck-py/shellcheck-py`.
 
-Each hook runs the tool the repo already has. A missing tool fails with an install hint.
+Each hook runs the tool the repo already has. A missing tool fails with an install hint; `eslint` and `prettier` skip a repo that has no config for them.
 `SKIP=<id> git commit` skips one hook once; CI callers pass `skip:` for hooks their runner cannot
 run (swift on Linux). Formatters rewrite files and fail the commit; review and re-stage.
 
@@ -60,4 +60,4 @@ prek install     # this repo runs its hooks from the working tree (repo: local)
 test/run         # hook scripts against good and bad inputs
 ```
 
-Release: merge to main, tag `vX.Y.Z` on main. Consumers move when Renovate opens the bump.
+Release: merge the release-please PR; it tags `vX.Y.Z`. Consumers move when Renovate opens the bump.
