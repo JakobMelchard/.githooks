@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/JakobMelchard/.githooks/compare/v1.0.2...v2.0.0) (2026-10-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop unreferenced hooks ([#11](https://github.com/JakobMelchard/.githooks/issues/11))
+
+### Code Refactoring
+
+* drop unreferenced hooks ([#11](https://github.com/JakobMelchard/.githooks/issues/11)) ([bb31173](https://github.com/JakobMelchard/.githooks/commit/bb311738a60f69323f2632cb38d45bedf4952e8d))
+
 ## [1.0.2](https://github.com/JakobMelchard/.githooks/compare/v1.0.1...v1.0.2) (2026-10-11)
 
 
