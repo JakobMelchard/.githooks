@@ -56,6 +56,17 @@ no env PATH="$PWD/nobin" "$h/gofmt.sh" y.go
 out=$(PATH="$PWD/nobin" "$h/gofmt.sh" y.go 2>&1); printf "%s" "$out" | grep -q "gofmt not found" || { bad=$((bad + 1)); echo "FAIL: missing-tool message"; }
 n=$((n + 1))
 
+# go-build: no go.mod is a no-op, a broken package fails
+if have go; then
+  ok "$h/go-build.sh"
+  printf 'module x\n\ngo 1.21\n' >go.mod
+  printf 'package x\nfunc F() int { return "s" }\n' >x.go
+  no "$h/go-build.sh"
+  printf 'package x\nfunc F() int { return 1 }\n' >x.go
+  ok "$h/go-build.sh"
+  rm -f go.mod x.go
+fi
+
 # tofu-fmt
 if have tofu || have terraform; then
   printf 'resource "a" "b" {\nx=1\n}\n' >m.tf

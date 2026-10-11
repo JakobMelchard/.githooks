@@ -46,14 +46,6 @@
   types: [swift]
   stages: [pre-commit]
 
-- id: swift-build
-  name: swift build
-  entry: hooks/swift-build.sh
-  language: script
-  pass_filenames: false
-  types: [swift]
-  stages: [pre-push]
-
 - id: xcodegen
   name: xcodegen generate
   description: Every tracked project.yml still generates.

@@ -20,7 +20,6 @@ repos:
     hooks:
       - id: conventional-commit
       - id: swift-format
-      - id: swift-build
   - repo: local # repo-specific checks (replaces .githooks/<hook>.local)
     hooks: []
 ```
@@ -44,7 +43,6 @@ skipped, CI cannot.
 | `gofmt` | pre-commit | rewrites, then fails so you re-stage |
 | `go-build` | pre-push | `go vet ./...` and `go build ./...` when `go.mod` is at the root |
 | `swift-format` | pre-commit | `format --in-place`, then `lint --strict`; a brew `swift-format` wins over Xcode's |
-| `swift-build` | pre-push | `swift build` when `Package.swift` is at the root |
 | `xcodegen` | pre-push | every tracked `project.yml` still generates |
 | `prettier` | pre-commit | the repo's own prettier (`npx --no-install`), so version and config come from `package.json` |
 | `eslint` | pre-commit | the repo's own eslint |
