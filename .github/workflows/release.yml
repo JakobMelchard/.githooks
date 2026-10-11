@@ -1,0 +1,15 @@
+name: release
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  release-please:
+    uses: JakobMelchard/.github/.github/workflows/release.yml@e1ef2b10e7ee0c5426f78d63a4e9c6a0ce9b3fe9 # v1.6.0
+    with: { release-type: simple }
+    # A called workflow cannot be granted more than the caller holds.
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
