@@ -1,8 +1,7 @@
 # .githooks
 
-Shared git hooks for the `JakobMelchard` org and the `lilfeelz` repos, as a
-[prek](https://github.com/j178/prek) / pre-commit hook repository. Public, so any repo, CI job or
-machine can fetch it without a token.
+Shared hooks for the `JakobMelchard` org and the `lilfeelz` repos, as a
+[prek](https://github.com/j178/prek) / pre-commit hook repository. Public, so it fetches without a token.
 
 ## Use in a repo
 
@@ -20,7 +19,7 @@ repos:
     hooks:
       - id: conventional-commit
       - id: swift-format
-  - repo: local # repo-specific checks (replaces .githooks/<hook>.local)
+  - repo: local # repo-specific checks
     hooks: []
 ```
 
@@ -30,9 +29,8 @@ prek install               # once per clone; writes .git/hooks shims
 prek run --all-files       # what CI runs
 ```
 
-Renovate bumps every `rev` (the org preset enables its pre-commit manager). CI runs the same config
-through `JakobMelchard/.github/.github/workflows/hooks.yml`, which is the gate: local hooks can be
-skipped, CI cannot.
+Renovate bumps every `rev`. CI runs the same config through
+`JakobMelchard/.github/.github/workflows/hooks.yml`; that is the gate, local hooks can be skipped.
 
 ## Hooks
 
@@ -51,12 +49,9 @@ skipped, CI cannot.
 Use upstream hook repos for the rest: `gitleaks/gitleaks`, `astral-sh/ruff-pre-commit`
 (`ruff-check`), `shellcheck-py/shellcheck-py`.
 
-Every hook here wraps a toolchain the repo needs anyway, so it runs against the installed tool. A
-missing tool fails with an install hint rather than passing silently; `SKIP=<id> git commit` skips
-one hook once, and CI callers pass `skip:` for hooks their runner cannot run (swift on Linux).
-
-prek stashes unstaged edits before the hooks run, so partially staged files are checked as staged.
-Formatters rewrite files and the commit fails; review and re-stage.
+Each hook runs the tool the repo already has. A missing tool fails with an install hint.
+`SKIP=<id> git commit` skips one hook once; CI callers pass `skip:` for hooks their runner cannot
+run (swift on Linux). Formatters rewrite files and fail the commit; review and re-stage.
 
 ## Develop
 

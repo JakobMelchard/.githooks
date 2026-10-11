@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Parse-check shell scripts with the interpreter their shebang names. shellcheck is a separate
-# hook (shellcheck-py), and it does not cover zsh, so zsh -n is the only check zsh gets.
+# Parse-check with the interpreter the shebang (else the file name) names. shellcheck skips zsh, so this is its only check.
 set -eo pipefail
 export HOOK=shell-syntax
 . "$(dirname "$0")/lib.sh"

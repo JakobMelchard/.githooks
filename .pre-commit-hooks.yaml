@@ -1,13 +1,4 @@
-# Hook manifest for prek (and pre-commit). Consumers pin this repo by tag:
-#
-#   - repo: https://github.com/JakobMelchard/.githooks
-#     rev: v1.0.0
-#     hooks: [{id: conventional-commit}, {id: gofmt}]
-#
-# Every hook here wraps a toolchain the repo already needs (go, swift, npm, tofu), so it runs
-# with language: script against the installed tool and fails with an install hint when the tool
-# is missing. Tools with a maintained upstream hook (gitleaks, ruff, shellcheck) are not wrapped
-# here; consumers pin those repos directly.
+# Hook manifest for prek and pre-commit. Usage and rules: README.md, AGENTS.md.
 
 - id: conventional-commit
   name: conventional commit subject

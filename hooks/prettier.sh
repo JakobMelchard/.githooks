@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Format with the repo's own prettier, so the version and config come from package.json
-# (@jakobmelchard/config). prek fails the commit when files change; re-stage them.
+# Format with the repo-installed prettier; only files that resolve a config are touched.
 set -eo pipefail
 export HOOK=prettier
 . "$(dirname "$0")/lib.sh"
