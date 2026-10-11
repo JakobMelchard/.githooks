@@ -18,4 +18,4 @@ types='feat|fix|chore|docs|refactor|test|ci|build|perf|style|revert'
 if ! printf '%s\n' "$subject" | grep -Eq "^($types)(\([A-Za-z0-9._/-]+\))?!?: .+"; then
   fail "\"$subject\" is not a conventional commit: <type>(<scope>)!: <subject>, type one of $types"
 fi
-[ "${#subject}" -le 100 ] || fail "subject is ${#subject} characters; keep it at 100 or under"
+[ "${#subject}" -le 72 ] || fail "subject is ${#subject} characters; keep it at 72 or under"
