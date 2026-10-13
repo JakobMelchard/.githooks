@@ -23,6 +23,10 @@ msg 'fix(api)!: drop v1';           ok "$h/conventional-commit.sh" m
 msg 'Merge branch main';            ok "$h/conventional-commit.sh" m
 msg 'fixup! feat: add x';           ok "$h/conventional-commit.sh" m
 printf '# comment\n\nchore: x\n' >m; ok "$h/conventional-commit.sh" m
+git config core.commentChar ';'
+printf '; comment\n\nchore: x\n' >m; ok "$h/conventional-commit.sh" m
+printf '# not a comment\n' >m;        no "$h/conventional-commit.sh" m
+git config --unset core.commentChar
 msg 'added stuff';                  no "$h/conventional-commit.sh" m
 msg 'feature: add x';               no "$h/conventional-commit.sh" m
 msg "feat: $(printf 'x%.0s' $(seq 1 66))"; ok "$h/conventional-commit.sh" m
