@@ -29,9 +29,6 @@ prek install               # once per clone; writes .git/hooks shims
 prek run --all-files       # what CI runs
 ```
 
-Renovate bumps every `rev`. CI runs the same config through
-`JakobMelchard/.github/.github/workflows/hooks.yml`; that is the gate, local hooks can be skipped.
-
 ## Hooks
 
 | id | stage | does |
@@ -46,12 +43,11 @@ Renovate bumps every `rev`. CI runs the same config through
 | `eslint` | pre-commit | the repo's own eslint |
 | `tofu-fmt` | pre-commit | `tofu fmt`, else `terraform fmt` |
 
-Use upstream hook repos for the rest: `gitleaks/gitleaks`, `astral-sh/ruff-pre-commit`
-(`ruff-check`), `shellcheck-py/shellcheck-py`.
+Upstream for the rest: `gitleaks/gitleaks`, `astral-sh/ruff-pre-commit` (`ruff-check`), `shellcheck-py/shellcheck-py`.
 
-Each hook runs the tool the repo already has. A missing tool fails with an install hint; `eslint` and `prettier` skip a repo that has no config for them.
-`SKIP=<id> git commit` skips one hook once; CI callers pass `skip:` for hooks their runner cannot
-run (swift on Linux). Formatters rewrite files and fail the commit; review and re-stage.
+```sh
+SKIP=<id> git commit     # skip one hook once
+```
 
 ## Develop
 
@@ -60,4 +56,4 @@ prek install     # this repo runs its hooks from the working tree (repo: local)
 test/run         # hook scripts against good and bad inputs
 ```
 
-Release: merge the release-please PR; it tags `vX.Y.Z`. Consumers move when Renovate opens the bump.
+Release: merge the release-please PR, which tags `vX.Y.Z`.
