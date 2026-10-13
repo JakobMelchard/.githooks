@@ -6,8 +6,8 @@ export HOOK=conventional-commit
 . "$(dirname "$0")/lib.sh"
 
 msg=${1:?commit message file}
-# first line that is neither empty nor a comment (|| true: grep exits 1 on no match under pipefail)
-subject=$(grep -v '^#' "$msg" | sed -n '/./{p;q;}' || true)
+# first line that is neither empty nor a comment; stripspace follows core.commentChar
+subject=$(git stripspace --strip-comments <"$msg" | sed -n '/./{p;q;}')
 [ -n "$subject" ] || exit 0 # git aborts an empty message on its own
 
 case "$subject" in
