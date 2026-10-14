@@ -1,5 +1,3 @@
-# Hook manifest for prek and pre-commit. Usage and rules: README.md, AGENTS.md.
-
 - id: conventional-commit
   name: conventional commit subject
   description: "Reject a subject that is not <type>(<scope>)!: <subject>. Same regex as the PR-title check."
