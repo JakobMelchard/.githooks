@@ -32,6 +32,8 @@ printf '# not a comment\n' >m;        no "$h/conventional-commit.sh" m
 git config --unset core.commentChar
 msg 'added stuff';                  no "$h/conventional-commit.sh" m
 msg 'feature: add x';               no "$h/conventional-commit.sh" m
+# a message past the pipe buffer, as `git commit -v` produces
+{ echo 'feat: x'; echo; head -c 300000 /dev/zero | tr '\0' 'y'; echo; } >m; ok "$h/conventional-commit.sh" m
 msg "feat: $(printf 'x%.0s' $(seq 1 66))"; ok "$h/conventional-commit.sh" m
 msg "feat: $(printf 'x%.0s' $(seq 1 67))"; no "$h/conventional-commit.sh" m
 
@@ -48,7 +50,7 @@ if have zsh; then
     cp q "$f"; ok "$h/shell-syntax.sh" "$f"
     printf 'case x in\n' >"$f"; no "$h/shell-syntax.sh" "$f"
   done
-fi
+else skip zsh; fi
 
 # gofmt: rewrites and fails, then passes
 if have gofmt; then
