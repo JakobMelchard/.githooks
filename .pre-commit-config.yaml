@@ -29,6 +29,12 @@ repos:
         entry: prek validate-manifest
         language: system
         files: ^\.pre-commit-hooks\.yaml$
+      - id: portable
+        name: no bash 4+ builtins
+        entry: test/portable
+        language: script
+        pass_filenames: false
+        files: ^(hooks|test)/
       - id: test
         name: hook tests
         entry: test/run
