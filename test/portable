@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-if grep -nE '^\s*(mapfile|readarray)\b|declare -A' hooks/*.sh test/run; then
+if grep -nE '(^|[^[:alnum:]_])(mapfile|readarray)([^[:alnum:]_]|$)|declare[[:space:]]+-A' hooks/*.sh test/run; then
   echo "bash 4+ construct found; macOS ships bash 3.2" >&2
   exit 1
 fi
