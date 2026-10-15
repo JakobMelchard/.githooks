@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/JakobMelchard/.githooks/compare/v2.0.0...v2.0.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* honor core.commentChar in the commit-msg hook ([#18](https://github.com/JakobMelchard/.githooks/issues/18)) ([5f45608](https://github.com/JakobMelchard/.githooks/commit/5f45608078896a304aa015fb99286bc6b6c5b55e))
+* tolerate large commit messages and enforce REQUIRE=zsh ([#27](https://github.com/JakobMelchard/.githooks/issues/27)) ([118a759](https://github.com/JakobMelchard/.githooks/commit/118a759b323d25834f1dfa02bec328e8525ace23))
+
 ## [2.0.0](https://github.com/JakobMelchard/.githooks/compare/v1.0.2...v2.0.0) (2026-10-11)
 
 
