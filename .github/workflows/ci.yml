@@ -6,7 +6,7 @@ on:
   pull_request:
 jobs:
   shell:
-    uses: JakobMelchard/.github/.github/workflows/shell.yml@4258fca96cbd14e90054debed585f9cf8aad04f7 # v2.1.0
+    uses: JakobMelchard/.github/.github/workflows/shell.yml@da5c1f89e2029e3f3e7a39a5dc1c9f9d5ad2084e # v2.2.3
     with:
       paths: .
       severity: warning
