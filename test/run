@@ -90,6 +90,26 @@ if have swift-format || xcrun --find swift-format >/dev/null 2>&1; then
   n=$((n + 1))
 else skip swift-format; fi
 
+# xcodegen: no tracked spec passes without xcodegen, a tracked one fails without it
+mkdir xbin
+for t in bash dirname git; do ln -s "$(command -v "$t")" "xbin/$t"; done
+ok env PATH="$PWD/xbin" "$h/xcodegen.sh"
+mkdir sub
+printf 'name: X\ntargets:\n  X:\n    type: tool\n    platform: macOS\n' >sub/project.yml
+git add sub/project.yml
+no env PATH="$PWD/xbin" "$h/xcodegen.sh"
+out=$(PATH="$PWD/xbin" "$h/xcodegen.sh" 2>&1); printf "%s" "$out" | grep -q "xcodegen not found" || { bad=$((bad + 1)); echo "FAIL: xcodegen missing-tool message"; }
+n=$((n + 1))
+if have xcodegen; then
+  ok "$h/xcodegen.sh"
+  [ -d sub/X.xcodeproj ] || { bad=$((bad + 1)); echo "FAIL: xcodegen did not generate next to its spec"; }
+  n=$((n + 1))
+  printf 'name: X\ntargets:\n  X:\n    type: nope\n    platform: macOS\n' >sub/project.yml
+  no "$h/xcodegen.sh"
+else skip xcodegen; fi
+git rm -q --cached -f sub/project.yml
+rm -rf sub
+
 # prettier
 if [ -x node_modules/.bin/prettier ] || { have npx && npx --no-install prettier --version >/dev/null 2>&1; }; then
   printf "const a = 'x'\n" > p.js
