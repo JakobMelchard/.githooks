@@ -39,7 +39,15 @@ printf '#!/usr/bin/env bash\necho ok\n' >good.sh
 printf '#!/bin/sh\nif then\n' >bad
 ok "$h/shell-syntax.sh" good.sh
 no "$h/shell-syntax.sh" bad
+# the shebang beats the name: a bash array in a .sh file is bash -n, not sh -n (dash rejects it)
+printf '#!/bin/bash\na=(1 2)\n[[ ${a[1]} == 2 ]]\n' >arr.sh; ok "$h/shell-syntax.sh" arr.sh
+printf '#!/usr/bin/env bash\nif then\n' >bad.sh; no "$h/shell-syntax.sh" bad.sh
+printf 'if true; then :; fi\n' >posix.sh; ok "$h/shell-syntax.sh" posix.sh
+printf 'if then\n' >bad2.sh; no "$h/shell-syntax.sh" bad2.sh
 if have zsh; then
+  # an extensionless file with a zsh shebang gets zsh -n, so zsh-only syntax passes
+  printf '#!/usr/bin/env zsh\n[[ -n $ZDOTDIR/.zcompdump(#qN.mh+168) ]] && echo stale\n' >zfn; ok "$h/shell-syntax.sh" zfn
+  printf '#!/bin/zsh\ncase x in\n' >zbad; no "$h/shell-syntax.sh" zbad
   printf '#!/usr/bin/env zsh\ncase x in\n' >bad.zsh; no "$h/shell-syntax.sh" bad.zsh
   # no shebang: the basename picks zsh, so zsh-only syntax (glob qualifier) passes and bash -n is not used
   printf '[[ -n $ZDOTDIR/.zcompdump(#qN.mh+168) ]] && echo stale\n' >q
