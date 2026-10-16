@@ -15,7 +15,7 @@ repos:
     rev: v8.30.1
     hooks: [{ id: gitleaks }]
   - repo: https://github.com/JakobMelchard/.githooks
-    rev: v2.0.0
+    rev: v2.0.1
     hooks:
       - id: conventional-commit
       - id: swift-format
