@@ -7,7 +7,7 @@ Shared hooks for the `JakobMelchard` org and the `lilfeelz` repos, as a
 
 ## Use in a repo
 
-`.pre-commit-config.yaml` at the repo root, pinning this repo by tag. Pick the hooks the repo needs:
+`.pre-commit-config.yaml` at the repo root, pinning `JakobMelchard/.github` at a `hooks-vX.Y.Z` tag. Pick the hooks the repo needs:
 
 ```yaml
 default_install_hook_types: [pre-commit, commit-msg, pre-push]
@@ -16,8 +16,8 @@ repos:
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.1
     hooks: [{ id: gitleaks }]
-  - repo: https://github.com/JakobMelchard/.githooks
-    rev: v2.0.1
+  - repo: https://github.com/JakobMelchard/.github
+    rev: hooks-v2.1.0
     hooks:
       - id: conventional-commit
       - id: swift-format
