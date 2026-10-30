@@ -1,5 +1,7 @@
 # .githooks
 
+Retired. The hooks live in [`JakobMelchard/.github`](https://github.com/JakobMelchard/.github/tree/main/hooks); pin `repo: https://github.com/JakobMelchard/.github` at a `hooks-vX.Y.Z` tag. Existing tags here stay valid.
+
 Shared hooks for the `JakobMelchard` org and the `lilfeelz` repos, as a
 [prek](https://github.com/j178/prek) / pre-commit hook repository. Public, so it fetches without a token.
 
